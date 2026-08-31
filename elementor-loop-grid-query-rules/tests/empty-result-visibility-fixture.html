@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>ELGQR empty-result visibility fixture</title>
+	<link rel="stylesheet" href="../assets/frontend.css">
+</head>
+<body>
+	<div class="fixture-tabs">
+		<div role="tablist">
+			<button id="tab-empty" role="tab" aria-selected="true" aria-controls="panel-empty">Empty</button>
+			<button id="tab-results" role="tab" aria-selected="false" aria-controls="panel-results">Results</button>
+			<button id="tab-custom" role="tab" aria-selected="false" aria-controls="panel-custom">Custom</button>
+			<button id="tab-invalid" role="tab" aria-selected="false" aria-controls="panel-invalid">Invalid selector</button>
+		</div>
+		<div id="panel-empty" role="tabpanel" aria-labelledby="tab-empty">
+			<div class="elementor-element-abc123"></div>
+		</div>
+		<div id="panel-results" role="tabpanel" aria-labelledby="tab-results"></div>
+		<div id="panel-custom" role="tabpanel" aria-labelledby="tab-custom">
+			<div class="elementor-element-def456"></div>
+		</div>
+		<div id="panel-invalid" role="tabpanel" aria-labelledby="tab-invalid">
+			<div class="elementor-element-ghi789"></div>
+		</div>
+	</div>
+	<div class="custom-empty-target">Custom target</div>
+	<script>
+		document.querySelector( '[role="tablist"]' ).addEventListener( 'click', function ( event ) {
+			if ( event.target.getAttribute( 'role' ) !== 'tab' ) {
+				return;
+			}
+
+			document.querySelectorAll( '[role="tab"]' ).forEach( function ( tab ) {
+				tab.setAttribute( 'aria-selected', tab === event.target ? 'true' : 'false' );
+			} );
+		} );
+
+		window.ELGQR_EMPTY_RESULTS = {
+			records: [
+				{ widgetId: 'abc123', queryId: 'auto', selector: '' },
+				{ widgetId: 'def456', queryId: 'custom', selector: '.custom-empty-target' },
+				{ widgetId: 'ghi789', queryId: 'invalid', selector: '[' }
+			]
+		};
+	</script>
+	<script src="../assets/frontend.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+Ref. Plugin/
+*.zip
+docs/
+local-docs/
+.loop-engineering/
+.DS_Store
+Thumbs.db
