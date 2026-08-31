@@ -1,0 +1,71 @@
+Query ID Rules for Elementor Loop Grid — Changelog
+
+= 0.4.2 =
+* Cache enabled rules, normalized rule configuration, and repeated current post/term field values for one PHP request only.
+* Stop composition child queries and sorting work after an exact no-results sentinel while preserving extension hooks.
+* Skip visibility-rule initialization for Loop Grids not using this plugin.
+* Demand-load the empty-result footer script/config and deduplicate selector/target work while retaining the anti-FOUC stylesheet.
+* Canonicalize ID-union child cache keys around the arguments that affect ID results.
+* Add opt-in count-only ID-union diagnostics without default logging or sensitive values.
+
+= 0.4.1 =
+* Enable empty-result target hiding by default for new rules and rules without a saved empty-result setting.
+* Preserve rules that were explicitly saved with empty-result target hiding disabled.
+
+= 0.4.0 =
+* Add an opt-in empty-result visibility panel to each Query ID Rule.
+* Hide the containing Elementor Nested Tabs button automatically when the final Loop Grid query is empty.
+* Allow a custom CSS selector to replace automatic TAB targeting.
+* Keep existing rules disabled by default and avoid hiding elements in the Elementor editor.
+
+= 0.3.6 =
+* Make configured taxonomy rows fail closed when their taxonomy or Term IDs cannot produce a query clause, instead of silently falling back to the unfiltered Current Query.
+* Preserve no-results branches while compiling taxonomy rule compositions, including an all-empty composition result.
+
+= 0.3.5 =
+* Move Enable this rule into its own sidebar panel below Publish.
+* Keep Sorting as the next sidebar panel.
+* Move Loop Grid post-type controls into a final Post attributes sidebar panel.
+* Keep the main Elementor Query ID panel focused on Query ID controls only.
+
+= 0.3.4 =
+* Simplify taxonomy filters to accept Term IDs only.
+* Remove the Term field selector and all slug, name, and term-taxonomy-ID lookup paths.
+* Invalid or legacy non-ID taxonomy values now return no results instead of silently broadening a query.
+
+= 0.3.3 =
+* Move the Query ID Rules control screen under WordPress Tools.
+* Add a Settings / Query ID Rules shortcut to the Plugins screen.
+
+= 0.3.2 =
+* Rebuilt the distributable ZIP with portable forward-slash entry paths for WordPress/Linux installations.
+
+= 0.3.1 =
+* Preserve an existing Polylang language query instead of replacing it with the language of a shared Elementor Archive Template.
+* Make `pll_current_language()` authoritative and use only an explicit request/page ID as the REST/editor fallback.
+* Keep Query ID Rule records global across languages.
+* Add Current archive term ACF and term-meta value sources for Current Query archives.
+
+= 0.3.0 =
+* Added an optional Polylang adapter with no hard dependency.
+* The same Query ID now inherits the current frontend or translated-page language.
+* Translate canonical taxonomy Term IDs, term-taxonomy IDs, slugs, and names at runtime.
+* Preserve REST, editor-preview, composition, and non-Polylang behavior.
+
+= 0.2.1 =
+* Compile taxonomy-only TAB compositions into one WP_Query.
+* Compile ACF/meta-only TAB compositions into one WP_Query.
+* Keep the ID-union fallback only for mixed or nested rule combinations.
+* Add request-scoped fallback result caching without persistent-cache complexity.
+
+= 0.2.0 =
+* Added reusable Query ID Rule composition.
+* TAB_ALL can include the union of TAB_A, TAB_B, and additional rules.
+* Added circular-reference protection and mixed taxonomy/ACF rule support.
+
+= 0.1.1 =
+* Removed all site-specific default field names, terms, and post types.
+* New rules preserve Elementor's post type and ordering unless explicitly overridden.
+
+= 0.1.0 =
+* Initial modular implementation.

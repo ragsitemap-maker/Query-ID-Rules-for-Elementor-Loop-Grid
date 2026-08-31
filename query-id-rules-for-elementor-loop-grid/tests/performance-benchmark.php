@@ -12,7 +12,7 @@
 
 namespace {
 	define( 'ABSPATH', __DIR__ );
-	define( 'ELGQR_URL', 'https://example.test/wp-content/plugins/elementor-loop-grid-query-rules/' );
+	define( 'ELGQR_URL', 'https://example.test/wp-content/plugins/query-id-rules-for-elementor-loop-grid/' );
 	define( 'ELGQR_VERSION', 'benchmark' );
 
 	$GLOBALS['elgqr_benchmark'] = array();

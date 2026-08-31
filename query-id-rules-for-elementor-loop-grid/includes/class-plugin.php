@@ -65,7 +65,7 @@ final class Plugin {
 		}
 
 		echo '<div class="notice notice-warning"><p>';
-		echo esc_html__( 'Query ID Rules for Elementor Loop Grid requires Elementor Pro Loop Grid to apply its rules. Rules can still be configured while Elementor Pro is inactive.', 'elementor-loop-grid-query-rules' );
+		echo esc_html__( 'Query ID Rules for Elementor Loop Grid requires Elementor Pro Loop Grid to apply its rules. Rules can still be configured while Elementor Pro is inactive.', 'query-id-rules-for-elementor-loop-grid' );
 		echo '</p></div>';
 	}
 }

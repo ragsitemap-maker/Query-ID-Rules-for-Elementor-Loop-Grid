@@ -21,11 +21,11 @@ class Rule_Repository {
 			self::POST_TYPE,
 			array(
 				'labels' => array(
-					'name'          => __( 'Loop Grid Filters', 'elementor-loop-grid-query-rules' ),
-					'singular_name' => __( 'Query Rule', 'elementor-loop-grid-query-rules' ),
-					'add_new_item'  => __( 'Add Query Rule', 'elementor-loop-grid-query-rules' ),
-					'edit_item'     => __( 'Edit Query Rule', 'elementor-loop-grid-query-rules' ),
-					'menu_name'     => __( 'Loop Grid Filters', 'elementor-loop-grid-query-rules' ),
+					'name'          => __( 'Query ID Rules', 'query-id-rules-for-elementor-loop-grid' ),
+					'singular_name' => __( 'Query ID Rule', 'query-id-rules-for-elementor-loop-grid' ),
+					'add_new_item'  => __( 'Add Query ID Rule', 'query-id-rules-for-elementor-loop-grid' ),
+					'edit_item'     => __( 'Edit Query ID Rule', 'query-id-rules-for-elementor-loop-grid' ),
+					'menu_name'     => __( 'Query ID Rules', 'query-id-rules-for-elementor-loop-grid' ),
 				),
 				'public'              => false,
 				'publicly_queryable'  => false,

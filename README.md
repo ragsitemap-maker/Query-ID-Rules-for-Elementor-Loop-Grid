@@ -17,7 +17,7 @@ Elementor Ltd.
 
 ## What the Plugin Does
 
-- Creates reusable Query IDs from **Tools → Loop Grid Filters**.
+- Creates reusable Query IDs from **Tools → Query ID Rules**.
 - Filters one or more post types by taxonomy Term IDs.
 - Supports `IN`, `AND`, and `NOT IN` taxonomy operators.
 - Filters by fixed post-meta values or values read from the current page or
@@ -61,11 +61,11 @@ only applied when Elementor Pro runs the matching Loop Grid Query ID.
    [GitHub Releases](https://github.com/ragsitemap-maker/Query-ID-Rules-for-Elementor-Loop-Grid/releases).
 2. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**.
 3. Upload the ZIP and activate **Query ID Rules for Elementor Loop Grid**.
-4. Open **Tools → Loop Grid Filters**.
+4. Open **Tools → Query ID Rules**.
 
 ## Quick Start
 
-1. Choose **Tools → Loop Grid Filters → Add Query Rule**.
+1. Choose **Tools → Query ID Rules → Add Query ID Rule**.
 2. Give the rule a descriptive title.
 3. Generate or enter a Query ID.
 4. Add the required taxonomy and/or ACF/custom-field conditions.
@@ -104,7 +104,7 @@ are left unchanged.
 
 ## Repository Layout
 
-- `elementor-loop-grid-query-rules/` — WordPress plugin source and contract tests
+- `query-id-rules-for-elementor-loop-grid/` — WordPress plugin source and contract tests
 - `README.md` — English project documentation
 - `README.zh-TW.md` — Traditional Chinese project documentation
 - `LICENSE` — GNU General Public License v2
@@ -117,17 +117,17 @@ repository documentation are excluded from the installable package.
 The contract fixtures can be run from the repository root:
 
 ```bash
-php elementor-loop-grid-query-rules/tests/rule-repository-defaults-contract.php
-php elementor-loop-grid-query-rules/tests/context-resolver-cache-contract.php
-php elementor-loop-grid-query-rules/tests/query-applier-taxonomy-contract.php
-php elementor-loop-grid-query-rules/tests/empty-result-visibility-contract.php
-node elementor-loop-grid-query-rules/tests/frontend-empty-result-contract.js
+php query-id-rules-for-elementor-loop-grid/tests/rule-repository-defaults-contract.php
+php query-id-rules-for-elementor-loop-grid/tests/context-resolver-cache-contract.php
+php query-id-rules-for-elementor-loop-grid/tests/query-applier-taxonomy-contract.php
+php query-id-rules-for-elementor-loop-grid/tests/empty-result-visibility-contract.php
+node query-id-rules-for-elementor-loop-grid/tests/frontend-empty-result-contract.js
 ```
 
 The performance fixture accepts a scenario and grid count:
 
 ```bash
-php elementor-loop-grid-query-rules/tests/performance-benchmark.php simple 26
+php query-id-rules-for-elementor-loop-grid/tests/performance-benchmark.php simple 26
 ```
 
 ## License

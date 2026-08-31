@@ -15,7 +15,7 @@ Loop Grid 查詢條件的前提下，加入 taxonomy、ACF／自訂欄位條件�
 
 ## 外掛功能
 
-- 從「工具 → Loop Grid Filters」建立可重複使用的 Query ID。
+- 從「工具 → Query ID Rules」建立可重複使用的 Query ID。
 - 依 taxonomy Term ID 篩選一個或多個 post type。
 - 支援 taxonomy 的 `IN`、`AND`、`NOT IN` operator。
 - 支援固定 post meta 值，以及從目前頁面或目前 taxonomy archive term 讀取
@@ -55,11 +55,11 @@ Query ID 時才會套用規則。
    下載最新可安裝 ZIP。
 2. 在 WordPress 後台開啟「外掛 → 安裝外掛 → 上傳外掛」。
 3. 上傳 ZIP 並啟用 **Query ID Rules for Elementor Loop Grid**。
-4. 前往「工具 → Loop Grid Filters」。
+4. 前往「工具 → Query ID Rules」。
 
 ## 快速開始
 
-1. 前往「工具 → Loop Grid Filters → Add Query Rule」。
+1. 前往「工具 → Query ID Rules → Add Query ID Rule」。
 2. 輸入容易辨識的規則標題。
 3. 產生或輸入 Query ID。
 4. 加入需要的 taxonomy 與／或 ACF／自訂欄位條件。
@@ -95,7 +95,7 @@ taxonomy Term ID 對應到目前語言。規則請儲存 canonical／預設語�
 
 ## Repository 結構
 
-- `elementor-loop-grid-query-rules/`：WordPress 外掛原始碼與 contract tests
+- `query-id-rules-for-elementor-loop-grid/`：WordPress 外掛原始碼與 contract tests
 - `README.md`：英文專案說明
 - `README.zh-TW.md`：繁體中文專案說明
 - `LICENSE`：GNU General Public License v2
@@ -107,17 +107,17 @@ GitHub Release ZIP 只包含正式執行檔；測試與 repository 文件不會�
 可從 repository root 執行 contract fixtures：
 
 ```bash
-php elementor-loop-grid-query-rules/tests/rule-repository-defaults-contract.php
-php elementor-loop-grid-query-rules/tests/context-resolver-cache-contract.php
-php elementor-loop-grid-query-rules/tests/query-applier-taxonomy-contract.php
-php elementor-loop-grid-query-rules/tests/empty-result-visibility-contract.php
-node elementor-loop-grid-query-rules/tests/frontend-empty-result-contract.js
+php query-id-rules-for-elementor-loop-grid/tests/rule-repository-defaults-contract.php
+php query-id-rules-for-elementor-loop-grid/tests/context-resolver-cache-contract.php
+php query-id-rules-for-elementor-loop-grid/tests/query-applier-taxonomy-contract.php
+php query-id-rules-for-elementor-loop-grid/tests/empty-result-visibility-contract.php
+node query-id-rules-for-elementor-loop-grid/tests/frontend-empty-result-contract.js
 ```
 
 Performance fixture 接受 scenario 與 grid count：
 
 ```bash
-php elementor-loop-grid-query-rules/tests/performance-benchmark.php simple 26
+php query-id-rules-for-elementor-loop-grid/tests/performance-benchmark.php simple 26
 ```
 
 ## 授權
