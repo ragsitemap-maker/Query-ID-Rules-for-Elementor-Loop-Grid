@@ -27,8 +27,11 @@ namespace {
 		$GLOBALS['elgqr_enqueued_styles'][ $handle ] = true;
 	}
 
-	function wp_register_script( $handle ) {
-		$GLOBALS['elgqr_registered_scripts'][ $handle ] = true;
+	function wp_register_script( $handle, $src = '', $deps = array() ) {
+		$GLOBALS['elgqr_registered_scripts'][ $handle ] = array(
+			'src'  => $src,
+			'deps' => $deps,
+		);
 	}
 
 	function wp_enqueue_script( $handle ) {
@@ -174,6 +177,7 @@ namespace ELGQR {
 		assert_same( 'energy_rule', $records[0]['queryId'], 'The record must identify the applied Query ID.' );
 		assert_same( '', $records[0]['selector'], 'An empty selector must preserve automatic Nested Tabs mode.' );
 		assert_same( true, isset( $GLOBALS['elgqr_enqueued_scripts']['elgqr-frontend'] ), 'A real empty result must demand-load the footer script.' );
+		assert_same( array(), $GLOBALS['elgqr_registered_scripts']['elgqr-frontend']['deps'], 'The frontend script must stay independent from the Elementor frontend handle.' );
 
 		$handler = new Empty_Result_Visibility( new Rule_Repository( array( rule() ) ) );
 		$handler->capture_query_result( new \WP_Query( array( 'elgqr_rule_id' => 10 ), array( (object) array( 'ID' => 1 ) ) ), new Test_Widget() );

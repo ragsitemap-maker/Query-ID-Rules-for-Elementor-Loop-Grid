@@ -2,8 +2,13 @@
 	'use strict';
 
 	var hiddenClass = 'elgqr-hidden-on-empty';
+	var maxReconcileAttempts = 240;
+	var maxReconcileDuration = 2000;
 	var selectorTargets = Object.create( null );
 	var processedTargets = [];
+	var retryInFlight = false;
+	var retryAttempts = 0;
+	var retryStartedAt = 0;
 
 	function automaticTabTarget( widget ) {
 		var panel = widget.closest( '[role="tabpanel"][aria-labelledby]' );
@@ -41,16 +46,84 @@
 		}
 
 		var tabs = Array.prototype.slice.call( tablist.querySelectorAll( '[role="tab"]' ) );
-		var fallback = tabs.find( function ( candidate ) {
-			return candidate !== hiddenTab
-				&& ! candidate.classList.contains( hiddenClass )
-				&& ! candidate.hidden
-				&& candidate.getAttribute( 'aria-disabled' ) !== 'true';
+		var hiddenIndex = tabs.indexOf( hiddenTab );
+
+		if ( hiddenIndex === -1 ) {
+			return;
+		}
+
+		for ( var offset = 1; offset < tabs.length; offset += 1 ) {
+			var candidate = tabs[ ( hiddenIndex + offset ) % tabs.length ];
+
+			if ( candidate.classList.contains( hiddenClass )
+				|| candidate.hidden
+				|| candidate.getAttribute( 'aria-disabled' ) === 'true' ) {
+				continue;
+			}
+
+			candidate.click();
+			return;
+		}
+	}
+
+	function reconcileHiddenSelectedTabs() {
+		var pendingReadiness = false;
+
+		processedTargets.forEach( function ( target ) {
+			if ( target.getAttribute( 'role' ) !== 'tab'
+				|| ! target.classList.contains( hiddenClass )
+				|| target.getAttribute( 'aria-selected' ) !== 'true' ) {
+				return;
+			}
+
+			var nestedTabs = target.closest( '.e-n-tabs' );
+
+			if ( nestedTabs && ! nestedTabs.classList.contains( 'e-activated' ) ) {
+				pendingReadiness = true;
+				return;
+			}
+
+			activateFallbackTab( target );
 		} );
 
-		if ( fallback ) {
-			fallback.click();
+		return pendingReadiness;
+	}
+
+	function resetRetry() {
+		retryInFlight = false;
+		retryAttempts = 0;
+		retryStartedAt = 0;
+	}
+
+	function runReconciliationAttempt() {
+		retryAttempts += 1;
+
+		var pendingReadiness = reconcileHiddenSelectedTabs();
+
+		if ( ! pendingReadiness ) {
+			resetRetry();
+			return;
 		}
+
+		if ( retryAttempts >= maxReconcileAttempts
+			|| Date.now() - retryStartedAt >= maxReconcileDuration
+			|| typeof window.requestAnimationFrame !== 'function' ) {
+			resetRetry();
+			return;
+		}
+
+		window.requestAnimationFrame( runReconciliationAttempt );
+	}
+
+	function startReconciliation() {
+		if ( retryInFlight ) {
+			return;
+		}
+
+		retryInFlight = true;
+		retryAttempts = 0;
+		retryStartedAt = Date.now();
+		runReconciliationAttempt();
 	}
 
 	function hideTarget( target ) {
@@ -60,15 +133,8 @@
 
 		processedTargets.push( target );
 
-		var wasSelectedTab = target.getAttribute( 'role' ) === 'tab'
-			&& target.getAttribute( 'aria-selected' ) === 'true';
-
 		target.classList.add( hiddenClass );
 		target.setAttribute( 'data-elgqr-hidden-empty', 'true' );
-
-		if ( wasSelectedTab ) {
-			activateFallbackTab( target );
-		}
 	}
 
 	function applyRecord( record ) {
@@ -97,6 +163,7 @@
 		}
 
 		config.records.forEach( applyRecord );
+		startReconciliation();
 	}
 
 	if ( document.readyState === 'loading' ) {

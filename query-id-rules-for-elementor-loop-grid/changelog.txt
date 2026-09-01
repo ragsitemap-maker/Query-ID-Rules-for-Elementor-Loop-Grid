@@ -1,5 +1,11 @@
 Query ID Rules for Elementor Loop Grid — Changelog
 
+= 0.5.3 =
+* Switch from a hidden selected TAB to the next available TAB after Elementor Nested Tabs finishes initializing.
+* Hide all empty TAB targets before choosing the fallback, including consecutive empty TABs and end-to-start wrapping.
+* Use one bounded readiness retry with a maximum of 240 attempts or 2000 milliseconds.
+* Keep Elementor's native TAB click handler as the sole owner of selected and active-panel state.
+
 = 0.4.2 =
 * Cache enabled rules, normalized rule configuration, and repeated current post/term field values for one PHP request only.
 * Stop composition child queries and sorting work after an exact no-results sentinel while preserving extension hooks.
