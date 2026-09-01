@@ -64,12 +64,14 @@ namespace {
 
 	class WP_Query {
 		public $posts = array();
+		public $found_posts = 0;
 
 		private $vars = array();
 
-		public function __construct( array $vars = array(), array $posts = array() ) {
-			$this->vars  = $vars;
-			$this->posts = $posts;
+		public function __construct( array $vars = array(), array $posts = array(), $found_posts = null ) {
+			$this->vars        = $vars;
+			$this->posts       = $posts;
+			$this->found_posts = null === $found_posts ? count( $posts ) : $found_posts;
 		}
 
 		public function get( $key ) {
@@ -149,12 +151,15 @@ namespace ELGQR {
 		reset_inline_scripts();
 	}
 
-	function records_from_handler( Empty_Result_Visibility $handler ) {
+	function config_from_handler( Empty_Result_Visibility $handler ) {
 		reset_inline_scripts();
 		$handler->print_runtime_config();
 
 		if ( empty( $GLOBALS['elgqr_inline_scripts'] ) ) {
-			return array();
+			return array(
+				'records' => array(),
+				'counts'  => array(),
+			);
 		}
 
 		$entry  = $GLOBALS['elgqr_inline_scripts'][0];
@@ -165,19 +170,55 @@ namespace ELGQR {
 		assert_same( 'elgqr-frontend', $entry['handle'], 'Runtime config must attach to the frontend handle.' );
 		assert_same( 'before', $entry['position'], 'Runtime config must print before the frontend script.' );
 
-		return isset( $data['records'] ) ? $data['records'] : array();
+		return array(
+			'records' => isset( $data['records'] ) ? $data['records'] : array(),
+			'counts'  => isset( $data['counts'] ) ? $data['counts'] : array(),
+		);
+	}
+
+	function records_from_handler( Empty_Result_Visibility $handler ) {
+		$config = config_from_handler( $handler );
+		return $config['records'];
 	}
 
 	function run_tests() {
 		$handler = new Empty_Result_Visibility( new Rule_Repository( array( rule() ) ) );
 		$handler->capture_query_result( new \WP_Query( array( 'elgqr_rule_id' => 10 ), array() ), new Test_Widget() );
-		$records = records_from_handler( $handler );
+		$config  = config_from_handler( $handler );
+		$records = $config['records'];
 		assert_same( 1, count( $records ), 'An enabled empty result must create one visibility record.' );
 		assert_same( 'abc123', $records[0]['widgetId'], 'The record must identify the rendered widget.' );
 		assert_same( 'energy_rule', $records[0]['queryId'], 'The record must identify the applied Query ID.' );
 		assert_same( '', $records[0]['selector'], 'An empty selector must preserve automatic Nested Tabs mode.' );
+		assert_same( array( array( 'widgetId' => 'abc123', 'total' => null ) ), $config['counts'], 'An empty query must not claim an exact full-result total.' );
 		assert_same( true, isset( $GLOBALS['elgqr_enqueued_scripts']['elgqr-frontend'] ), 'A real empty result must demand-load the footer script.' );
 		assert_same( array(), $GLOBALS['elgqr_registered_scripts']['elgqr-frontend']['deps'], 'The frontend script must stay independent from the Elementor frontend handle.' );
+
+		$handler = new Empty_Result_Visibility( new Rule_Repository( array( rule() ) ) );
+		$handler->capture_query_result( new \WP_Query( array(), array( (object) array( 'ID' => 1 ) ), 12 ), new Test_Widget( 'candidate' ) );
+		$handler->capture_query_result( new \WP_Query( array( 'elgqr_rule_id' => 10 ), array(), 0 ), new Test_Widget( 'empty' ) );
+		$config = config_from_handler( $handler );
+		assert_same(
+			array(
+				array( 'widgetId' => 'candidate', 'total' => 12 ),
+				array( 'widgetId' => 'empty', 'total' => null ),
+			),
+			$config['counts'],
+			'Counts rendered before the managed empty Grid must remain available without requiring an ELGQR Query ID.'
+		);
+
+		$handler = new Empty_Result_Visibility( new Rule_Repository( array( rule() ) ) );
+		$handler->capture_query_result( new \WP_Query( array(), array( (object) array( 'ID' => 1 ) ), 7 ), new Test_Widget( 'latest' ) );
+		$handler->capture_query_result( new \WP_Query( array( 'no_found_rows' => true ), array( (object) array( 'ID' => 1 ) ), 99 ), new Test_Widget( 'latest' ) );
+		$handler->capture_query_result( new \WP_Query( array( 'elgqr_rule_id' => 10 ), array(), 0 ), new Test_Widget( 'empty' ) );
+		$config = config_from_handler( $handler );
+		assert_same( array( 'widgetId' => 'latest', 'total' => null ), $config['counts'][0], 'The latest callback must replace a stale exact total, and no_found_rows must remain unknown.' );
+
+		$handler = new Empty_Result_Visibility( new Rule_Repository( array( rule() ) ) );
+		$handler->capture_query_result( new \WP_Query( array(), array( (object) array( 'ID' => 1 ), (object) array( 'ID' => 2 ) ), 1 ), new Test_Widget( 'invalid_total' ) );
+		$handler->capture_query_result( new \WP_Query( array( 'elgqr_rule_id' => 10 ), array(), 0 ), new Test_Widget( 'empty' ) );
+		$config = config_from_handler( $handler );
+		assert_same( null, $config['counts'][0]['total'], 'A found_posts value below the rendered post count must be treated as unknown.' );
 
 		$handler = new Empty_Result_Visibility( new Rule_Repository( array( rule() ) ) );
 		$handler->capture_query_result( new \WP_Query( array( 'elgqr_rule_id' => 10 ), array( (object) array( 'ID' => 1 ) ) ), new Test_Widget() );

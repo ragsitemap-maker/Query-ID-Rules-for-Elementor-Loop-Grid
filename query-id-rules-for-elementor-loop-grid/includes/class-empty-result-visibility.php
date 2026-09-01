@@ -13,6 +13,8 @@ class Empty_Result_Visibility {
 
 	private $empty_records = array();
 
+	private $result_counts = array();
+
 	public function __construct( Rule_Repository $repository ) {
 		$this->repository = $repository;
 	}
@@ -42,15 +44,24 @@ class Empty_Result_Visibility {
 			return;
 		}
 
-		$rule_id = absint( $query->get( 'elgqr_rule_id' ) );
-
-		if ( ! $rule_id || ! method_exists( $widget, 'get_id' ) ) {
+		if ( ! method_exists( $widget, 'get_id' ) ) {
 			return;
 		}
 
 		$widget_id = sanitize_key( $widget->get_id() );
 
 		if ( ! $widget_id ) {
+			return;
+		}
+
+		$this->result_counts[ $widget_id ] = array(
+			'widgetId' => $widget_id,
+			'total'    => $this->normalize_result_total( $query ),
+		);
+
+		$rule_id = absint( $query->get( 'elgqr_rule_id' ) );
+
+		if ( ! $rule_id ) {
 			return;
 		}
 
@@ -86,6 +97,7 @@ class Empty_Result_Visibility {
 		$config = wp_json_encode(
 			array(
 				'records' => array_values( $this->empty_records ),
+				'counts'  => array_values( $this->result_counts ),
 			),
 			JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 		);
@@ -141,6 +153,20 @@ class Empty_Result_Visibility {
 			'enabled'         => ! empty( $empty_result['enabled'] ),
 			'target_selector' => isset( $empty_result['target_selector'] ) ? (string) $empty_result['target_selector'] : '',
 		);
+	}
+
+	private function normalize_result_total( \WP_Query $query ) {
+		if ( empty( $query->posts ) || $query->get( 'no_found_rows' ) ) {
+			return null;
+		}
+
+		if ( ! isset( $query->found_posts ) || ! is_int( $query->found_posts ) ) {
+			return null;
+		}
+
+		$post_count = count( $query->posts );
+
+		return $query->found_posts >= $post_count ? $query->found_posts : null;
 	}
 
 	private function is_loop_grid( $widget ) {

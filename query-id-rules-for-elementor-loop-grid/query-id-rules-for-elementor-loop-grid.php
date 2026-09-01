@@ -3,7 +3,7 @@
  * Plugin Name: Query ID Rules for Elementor Loop Grid
  * Plugin URI: https://github.com/ragsitemap-maker/Query-ID-Rules-for-Elementor-Loop-Grid
  * Description: Manage reusable Elementor Loop Grid Query IDs with taxonomy, ACF/meta, and sorting rules.
- * Version: 0.5.3
+ * Version: 0.5.5
  * Author: Site Development Team
  * Author URI: https://github.com/ragsitemap-maker
  * Requires at least: 6.0
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ELGQR_VERSION', '0.5.3' );
+define( 'ELGQR_VERSION', '0.5.5' );
 define( 'ELGQR_FILE', __FILE__ );
 define( 'ELGQR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ELGQR_URL', plugin_dir_url( __FILE__ ) );

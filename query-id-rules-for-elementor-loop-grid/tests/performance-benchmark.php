@@ -236,8 +236,9 @@ namespace {
 	}
 
 	class WP_Query {
-		public $query_vars = array();
-		public $posts      = array();
+		public $query_vars  = array();
+		public $posts       = array();
+		public $found_posts = 0;
 
 		public function __construct( array $args = array() ) {
 			$this->query_vars = $args;
@@ -422,7 +423,8 @@ namespace ELGQR {
 					$applier->apply( $query, $widget, $repository->get( $rule_id[ $scenario ] ) );
 				}
 
-				$query->posts = 'empty_result' === $scenario ? array() : array( (object) array( 'ID' => $index + 1 ) );
+				$query->posts       = 'empty_result' === $scenario ? array() : array( (object) array( 'ID' => $index + 1 ) );
+				$query->found_posts = count( $query->posts );
 				$visibility->capture_query_result( $query, $widget );
 
 				if ( 'id_union' === $scenario ) {

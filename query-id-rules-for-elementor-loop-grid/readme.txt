@@ -3,7 +3,7 @@ Tags: elementor, loop-grid, query-id, acf, taxonomy
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 0.5.3
+Stable tag: 0.5.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -133,10 +133,20 @@ For ACF filters, use a language-neutral stored code or Current page ACF as the v
 * Rules are loaded on the next request after being saved.
 * Empty-result visibility uses Elementor's completed initial Loop Grid query. It does not rerun the query and does not track later AJAX filter or pagination updates.
 * The small empty-result hide stylesheet stays in the page head to avoid a flash; the frontend script and runtime config load only when the request actually produces an empty configured Loop Grid.
-* If an automatically hidden TAB is selected, the next available TAB in the same tab list is activated after Elementor finishes initializing. The readiness check is short-lived and bounded.
+* When a Nested Tabs group contains an automatically hidden empty-result TAB, the available TAB with the highest exact WP_Query result total is activated after Elementor finishes initializing, even when the current TAB is non-empty. Ties use the first TAB in DOM order. Incomplete or ambiguous totals keep an available current TAB unchanged, while a hidden current TAB safely falls back to the next available TAB.
 * Elementor is a trademark of Elementor Ltd. This independent plugin is not affiliated with or endorsed by Elementor Ltd.
 
 == Changelog ==
+
+= 0.5.5 =
+* Select the highest exact-total TAB whenever the affected Nested Tabs group contains an automatically hidden empty result, even if the current TAB is non-empty.
+* Keep an available current TAB unchanged when totals are incomplete; preserve next-and-wrap only when the current TAB is hidden.
+* Deduplicate affected tablists inside one 100 ms readiness loop capped at 100 attempts or 10 seconds, without adding observers, intervals, events, or queries.
+
+= 0.5.4 =
+* Prefer the available TAB with the highest exact WordPress query-result total when the selected TAB is hidden for an empty Loop Grid.
+* Resolve tied maximum totals by TAB order and preserve the 0.5.3 next-and-wrap behavior when any candidate total is unavailable or ambiguous.
+* Reuse completed Loop Grid queries without adding database queries, persistent observers, intervals, or event listeners.
 
 = 0.5.3 =
 * Switch from a hidden selected TAB to the next available TAB after Elementor Nested Tabs finishes initializing.

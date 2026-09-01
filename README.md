@@ -93,10 +93,14 @@ fallback with request-scoped caching.
 Empty-result visibility is enabled by default for new rules. Leave the CSS
 selector empty to hide the Elementor Nested Tabs button whose panel contains the
 empty Loop Grid, or enter a selector to hide another target. This consumes
-Elementor's completed initial query and does not rerun it. If the hidden button
-was selected, version 0.5.3 waits briefly for Nested Tabs to initialize, then
-activates the next available button in the same tab list. The readiness retry is
-bounded and leaves no persistent observer, interval, or event listener.
+Elementor's completed initial query and does not rerun it. Version 0.5.5 waits
+briefly for an affected Nested Tabs group to initialize, then activates the
+available button with the highest exact WordPress query-result total even when
+the current button is non-empty. Ties use the first button in DOM order.
+Incomplete or ambiguous totals keep an available current button unchanged; a
+hidden current button falls back to the next available button. The readiness
+retry runs at 100 ms intervals and stops after at most 100 attempts or 10 seconds,
+leaving no persistent observer, interval, or event listener.
 
 ## Polylang
 

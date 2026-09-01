@@ -85,10 +85,12 @@ taxonomy 與 meta 的分支則使用 ID-union fallback 與單次 request cache�
 
 新規則預設啟用空結果顯示控制。CSS selector 留空時，會自動隱藏包含該空白
 Loop Grid 的 Elementor Nested Tabs 按鈕；也可以輸入 selector 改為隱藏其他
-目標。判斷直接使用 Elementor 已完成的初始查詢，不會重跑查詢。如果被隱藏的
-TAB 原本為 selected，0.5.3 會短暫等待 Nested Tabs 完成初始化，再啟用同一組
-下一個可用 TAB。readiness retry 有明確上限，不留下常駐 observer、interval 或
-event listener。
+目標。判斷直接使用 Elementor 已完成的初始查詢，不會重跑查詢。0.5.5 會短暫
+等待含有自動隱藏空結果 TAB 的 Nested Tabs 完成初始化，再啟用同一組完整
+WordPress 查詢總數最大的可用 TAB，即使目前 selected TAB 本身不是空集合也會
+比較。最大值並列時選 DOM 順序第一個；數量缺漏或有歧義時，若目前 TAB 可用就
+維持不動，只有目前 TAB 被隱藏時才退回下一個可用 TAB。readiness retry 有明確
+上限：每100ms一次，最多100次或10秒，不留下常駐observer、interval或event listener。
 
 ## Polylang
 
